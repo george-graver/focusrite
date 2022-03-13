@@ -55,4 +55,4 @@ if (firstWinner) {
     console.log('No winner');
 }
 
-module.exports = { parseNumbers };
+module.exports = { parseNumbers, isWinningBoard };

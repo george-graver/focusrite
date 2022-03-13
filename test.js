@@ -3,7 +3,7 @@ const {
     parseNumbers,
     isWinningBoard,
     findFirstWinner
-} = require('./main');
+} = require('./bingo');
 
 test('working at focusrite', assert => {
     assert.true(true, 'Focusrite is a great place to work');

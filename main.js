@@ -1,9 +1,17 @@
 const fs = require('fs');
 
 function parseInput(input) {
-    const file = fs.readFileSync(input, 'utf8');
-    const lines = file.split(/\r?\n/);
-    return lines;
+    const inputSections = input.split(/\n\s*\n/);
+    const calledNumbers = parseNumbers(inputSections[0], ',');
+    const boards = inputSections.slice(1).map(parseBoard);
+    return { calledNumbers, boards };
+}
+
+function parseBoard(boardStr) {
+    const boardLines = boardStr.split('\r\n');
+    const rows = boardLines.map(line => parseNumbers(line, ' '));
+    const columns = invert2dArray(rows);
+    return { rows, columns };
 }
 
 function parseNumbers(numbersStr, delimiter) {
@@ -17,20 +25,14 @@ function invert2dArray(arr) {
     return arr.map((row, rowIndex) => row.map((_, colIndex) => arr[colIndex][rowIndex]));
 }
 
-function isWinningBoard(numbers, combinations) {
+function isWinningBoard(numbers, board) {
+    const combinations = [...board.rows, ...board.columns];
     return combinations.some(c => c.every(n => numbers.includes(n)));
 }
 
-const lines = parseInput('./input.txt');
-const numbersStr = lines[0];
-const numbers = parseNumbers(numbersStr, ',');
-
-// TODO parse multiple boards
-const boardLines = lines.slice(2);
-const rows = boardLines.map(line => parseNumbers(line, ' '));
-const columns = invert2dArray(rows);
-const possibleCombinations = rows.concat(columns);
-const isWinner = isWinningBoard(numbers, possibleCombinations);
+const inputStr = fs.readFileSync('./input.txt', 'utf8');
+const { calledNumbers, boards } = parseInput(inputStr);
+const isWinner = isWinningBoard(calledNumbers, boards[1]);
 console.log("Winner: " + isWinner);
 
 module.exports = { parseNumbers };

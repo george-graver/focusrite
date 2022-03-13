@@ -13,20 +13,19 @@ function parseNumbers(numbersStr, delimiter) {
         .filter(n => !isNaN(n));
 }
 
-function parseBoard(boardLines) {
-    const rows = boardLines.map(line => parseNumbers(line, ' '));
-    console.log(rows);
+function invert2dArray(arr) {
+    return arr.map((row, rowIndex) => row.map((_, colIndex) => arr[colIndex][rowIndex]));
 }
 
 const lines = parseInput('./input.txt');
-
 const numbersStr = lines[0];
 const numbers = parseNumbers(numbersStr, ',');
 
+// TODO parse multiple boards
 const boardLines = lines.slice(2);
-console.log(boardLines);
-const board = parseBoard(boardLines);
-
-
+const rows = boardLines.map(line => parseNumbers(line, ' '));
+const columns = invert2dArray(rows);
+const possibleCombinations = rows.concat(columns);
+console.log('Possible combinations:', possibleCombinations);
 
 module.exports = { parseNumbers };

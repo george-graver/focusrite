@@ -1,10 +1,10 @@
 const fs = require('fs');
 
 function parseInput(input) {
-    const inputSections = input.split(/\n\s*\n/);
-    const calledNumbers = parseNumbers(inputSections[0], ',');
+    const inputSections = input.split('\r\n\r\n');
+    const numbers = parseNumbers(inputSections[0], ',');
     const boards = inputSections.slice(1).map(parseBoard);
-    return { calledNumbers, boards };
+    return { numbers, boards };
 }
 
 function parseBoard(boardStr) {
@@ -30,9 +30,29 @@ function isWinningBoard(numbers, board) {
     return combinations.some(c => c.every(n => numbers.includes(n)));
 }
 
+function findFirstWinner(numbers, boards) {
+    const calledNumbers = [];
+    
+    for (const num of numbers) {
+        calledNumbers.push(num);
+        const firstWinningBoard = boards.find(b => isWinningBoard(calledNumbers, b));
+
+        if (firstWinningBoard) {
+            return firstWinningBoard;
+        }
+    }
+
+    return null;
+}
+
 const inputStr = fs.readFileSync('./input.txt', 'utf8');
-const { calledNumbers, boards } = parseInput(inputStr);
-const isWinner = isWinningBoard(calledNumbers, boards[1]);
-console.log("Winner: " + isWinner);
+const { numbers, boards } = parseInput(inputStr);
+const firstWinner = findFirstWinner(numbers, boards);
+
+if (firstWinner) {
+    console.log('First winner is board number ' + (boards.indexOf(firstWinner) + 1));
+} else {
+    console.log('No winner');
+}
 
 module.exports = { parseNumbers };
